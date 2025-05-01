@@ -1,50 +1,63 @@
-from email.policy import default
-
 import streamlit as st
+from streamlit import session_state
 
-st.set_page_config(layout='wide', page_title='Prompt Playground')
-st.title('Prompt Playground')
-st.caption("Learn the basics of Prompt Engineering")
+st.set_page_config(layout="wide", page_title="Prompt Comparison Playground")
+
+st.title("Prompt Comparison Playground")
+st.caption("Compare different LLM responses")
+
+with st.container(key="form"):
+    prompt = st.text_input("Enter your prompt:", placeholder="Explain Prompt Engineering to me like I'm a 10 year old kid.")
+    st.session_state['prompt'] = prompt
 
 col1, col2 = st.columns(2)
 
+with col1:
+    with st.container(key='llm1'):
+        st.header("LLM 1:")
+
+        available_llms_1 = ["None", "Google Gemini", "Anthropic Claude", "Meta Llama", "Mistral"]
+        selected_llm_1 = st.selectbox(label="LLM:", options=available_llms_1, key="llm1_selection")
+        if selected_llm_1=="None":
+            st.warning("You forgot to select an LLM!")
+        temperature_1 = st.slider(label="Temperature:", min_value=0.00, max_value=2.00, step=0.01, value=1.00, key="temp1", help="Controls randomness in the output — higher values make responses more creative.")
+        top_p_1 = st.slider(label="Top-p:", min_value=0.00, max_value=1.00, step=0.01, value=1.00, key="top_p1", help="Limits the model to selecting from the top p% of likely words — encourages diversity while staying relevant.")
+        max_tokens_1 = st.slider(label="Maximum No. of tokens:", min_value=10, max_value=2000, value=200, step=5, key="max_tokens1", help="Sets the maximum length of the output in tokens (words/subwords).")
+
+        # save parameters to session_state for the 1st LLM
+        st.session_state['selected_llm_1'] = selected_llm_1
+        st.session_state['temperature_1'] = temperature_1
+        st.session_state['top_p_1'] = top_p_1
+        st.session_state['max_tokens_1'] = max_tokens_1
+
+
 with col2:
-    with st.container():
-        st.write("LLM parameters:")
-        st.write("Mess around and see what works for you!")
-        with st.form(key='form'):
-            prompt = st.text_area('Prompt:', placeholder="Explain Prompt Engineering to me like I'm a 10 year old kid.")
-            temperature = st.slider('Temperature:', min_value=0.00, max_value=2.00, step=0.01, value=1.00, help="Controls the 'creativity' of the response")
-            top_p = st.slider('Top p:', min_value=0.0, max_value=1.0, step=0.01, help="Controls diversity via nucleus sampling: the model considers the smallest set of words whose cumulative probability is ≥ top_p. Lower values = more focused, higher values = more diverse.")
-            max_tokens = st.slider('Max Tokens:', min_value=10, max_value=2500, step=50, value=100, help="The maximum number of tokens (words or word pieces) the model can generate. More tokens = longer responses.")
-            frequency_pen = st.slider('Frequency Penalty:', min_value=-2.0, max_value=2.0, step=0.01, help="Penalizes repeated words based on how often they appear. Positive values reduce repetition, encouraging varied vocabulary.")
-            presence_pen = st.slider('Presence Penalty:', min_value=-2.0, max_value=2.0, step=0.01, help="Penalizes repeated topics or phrases regardless of frequency. Encourages introducing new concepts.")
+    with st.container(key='llm2'):
+        st.header("LLM 2:")
 
-            submit_params = st.form_submit_button('Generate', type='primary')
+        available_llms_2 = ["None", "Google Gemini", "Anthropic Claude", "Meta Llama", "Mistral"]
+        selected_llm_2 = st.selectbox(label="LLM:", options=available_llms_2, key="llm2_selection")
+        if selected_llm_2=="None":
+            st.warning("You forgot to select an LLM!")
 
-            if submit_params:
-                st.session_state['entered_prompt'] = prompt
-                st.success("Prompt saved to session state!")
+        temperature_2 = st.slider(label="Temperature:", min_value=0.00, max_value=2.00, step=0.01, value=1.00, key="temp2", help="Controls randomness in the output — higher values make responses more creative.")
+        top_p_2 = st.slider(label="Top-p:", min_value=0.00, max_value=1.00, step=0.01, value=1.00, key="top_p2", help="Limits the model to selecting from the top p% of likely words — encourages diversity while staying relevant.")
+        max_tokens_2 = st.slider(label="Maximum No. of tokens:", min_value=10, max_value=2000, value=200, step=5, key="max_tokens2", help="Sets the maximum length of the output in tokens (words/subwords).")
+
+        # save parameters to session_state for the 2nd LLM
+        st.session_state['selected_llm_2'] = selected_llm_2
+        st.session_state['temperature_2'] = temperature_2
+        st.session_state['top_p_2'] = top_p_2
+        st.session_state['max_tokens_2'] = max_tokens_2
+
+st.button("Generate Responses", type="secondary")
 
 with col1:
-    with st.container():
-        with st.form(key='llm_selection'):
-            st.write("Select an LLM from the list to continue:")
-            selected_llm = st.selectbox(
-                label="Select an LLM",
-                options=[
-                    "None selected",
-                    "Google Gemini",
-                    "Groq (Mixtral)",
-                    "Perplexity Labs",
-                    "Cohere Command R+",
-                    "LLaMA 3 (via Open Source)"
-                ]
-            )
+    with st.container(key="llm1_response"):
+        st.subheader(f"{selected_llm_1} Response:")
+        st.markdown(st.session_state)
 
-            submit_llm = st.form_submit_button('Generate', type='primary')
-
-            if submit_llm:
-                st.session_state['entered_prompt'] = prompt
-                st.session_state['selected_llm'] = selected_llm
-                st.success(f"LLM selected: {selected_llm}")
+with col2:
+    with st.container(key="llm2_response"):
+        st.subheader(f"{selected_llm_2} Response:")
+        st.markdown(st.session_state)
