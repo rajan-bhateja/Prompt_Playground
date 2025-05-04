@@ -46,7 +46,10 @@ with col2:
 with col1:
     with st.container(key="llm1_response"):
         st.subheader("LLM1 Response:")
-        if selected_llm_1 == "Google Gemini":
+        if selected_llm_1 == "---":
+            st.warning("Select an LLM to continue!")
+
+        elif selected_llm_1 == "Google Gemini":
             response = generate_response.generate_response_via_gemini(prompt, temperature_1, max_tokens_1, top_p_1)
 
         elif selected_llm_1 == "Anthropic Claude":
@@ -69,7 +72,10 @@ with col1:
 with col2:
     with st.container(key="llm2_response"):
         st.subheader("LLM2 Response:")
-        if selected_llm_2 == "Google Gemini":
+        if selected_llm_1 == "---":
+            st.warning("Select an LLM to continue!")
+
+        elif selected_llm_2 == "Google Gemini":
             response = generate_response.generate_response_via_gemini(prompt, temperature_2, max_tokens_2, top_p_2)
 
         elif selected_llm_2 == "Anthropic Claude":
