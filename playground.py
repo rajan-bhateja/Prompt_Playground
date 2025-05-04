@@ -69,4 +69,22 @@ with col1:
 with col2:
     with st.container(key="llm2_response"):
         st.subheader("LLM2 Response:")
-        st.markdown("LLM Response")
+        if selected_llm_2 == "Google Gemini":
+            response = generate_response.generate_response_via_gemini(prompt, temperature_2, max_tokens_2, top_p_2)
+
+        elif selected_llm_2 == "Anthropic Claude":
+            response = generate_response.generate_response_via_claude(prompt, temperature_2, max_tokens_2, top_p_2)
+
+        elif selected_llm_2 == "Meta Llama":
+            response = generate_response.generate_response_via_llama(prompt, temperature_2, max_tokens_2, top_p_2)
+
+        elif selected_llm_2 == "Mistral":
+            response = generate_response.generate_response_via_mistral(prompt, temperature_2, max_tokens_2, top_p_2)
+
+        elif selected_llm_2 == "Perplexity Sonar":
+            response = generate_response.generate_response_via_sonar(prompt, temperature_2, max_tokens_2, top_p_2)
+
+        else:
+            st.error("Error occurred! Please try again!")
+
+        st.markdown(response)

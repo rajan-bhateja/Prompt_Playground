@@ -1,15 +1,18 @@
-from google import generativeai as genai
-from google.generativeai import GenerationConfig
-from google.generativeai import client
+import google.generativeai as genai
+from google.generativeai.types import GenerationConfig
 
+genai.configure(api_key="gemini_api_key")
 
 def generate_response_via_gemini(prompt, temperature, max_tokens, top_p):
-    client = genai.Client(api_key="gemini_api_key")
+    model = genai.GenerativeModel("gemini-2.0-flash")
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt,
-        config=GenerationConfig(
-            max_output_tokens=max_tokens, temperature=temperature, top_p=top_p)
-        )
+    generation_config = GenerationConfig(
+        temperature=temperature,
+        max_output_tokens=max_tokens,
+        top_p=top_p
+    )
+
+    response = model.generate_content(
+        prompt, generation_config=generation_config
+    )
     return response.text
