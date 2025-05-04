@@ -12,11 +12,14 @@ with st.container(key="form"):
     if not prompt:
         st.warning("Enter a prompt to continue!")
 
+st.info("At the moment, only 2 LLMs - Gemini and Mistral are working!")
+
 col1, col2 = st.columns(2)
 
 available_llms = ["---", "Google Gemini", "Anthropic Claude", "Meta Llama", "Mistral", "Perplexity Sonar"]
 
 response = ""
+
 
 with col1:
     with st.container(key='llm1'):
